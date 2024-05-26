@@ -4,13 +4,13 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
-                @if($createKebun)
-                @include('livewire.kebun.add')
+                @if($createDempDet)
+                @include('livewire.demplotdetail.add')
                 <br>
                 @endif
 
-                @if($updateKebun)
-                @include('livewire.kebun.edit')
+                @if($updateDempDet)
+                @include('livewire.demplotdetail.edit')
                 <br>
                 @endif
             </div>
@@ -47,7 +47,7 @@
             </div>
 
             <div class="col-12">
-                @if(!$createKebun && !$updateKebun)
+                @if(!$createDempDet && !$updateDempDet)
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-lg-flex">
@@ -72,21 +72,19 @@
                                                 <th class="text-uppercase text-white text-xs font-weight-bolder">
                                                     No
                                                 </th>
-                                                <th class="text-uppercase text-white text-xs font-weight-bolder">
-                                                    Nama</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Alamat</th>
+                                                    Nama <br> Alamat <br> Perusahaan</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Telpon Pelanggan</th>
+                                                    No Bukti <br> (Tanggal Bukti)</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Perusahaan</th>
+                                                    Luas Demplot <br> (Jumlah Pohon Demplot)</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Telepon Perusahaan</th>
+                                                    Tahapan <br> (Sesi Demplot)</th>
                                                 <th class="text-white"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse ($dPelanggan as $key => $rPelanggan)
+                                            @forelse ($dDemplotMas as $key => $rDemplotMas)
                                             <?php $no = 1; ?>
                                             <tr>
                                                 <td>
@@ -98,34 +96,35 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{$rPelanggan->pelanggan_name}}</h6>
+                                                        <h6 class="mb-0 text-sm">{{$rDemplotMas->pelanggan->pelanggan_name}}</h6>
+                                                        <p class="text-xs text-secondary mb-0">
+                                                            {{$rDemplotMas->pelanggan->pelanggan_alamat}}, <br> <strong>Kel/Desa. </strong> {{ucwords(strtolower($rDemplotMas->pelanggan->keldes->keldes_name))}}, <br>
+                                                            <strong>Kec. </strong>{{ucwords(strtolower($rDemplotMas->pelanggan->keldes->kecamatan->kec_name))}}, <br> <strong>Kab/Kota. </strong>{{ucwords(strtolower($rDemplotMas->pelanggan->keldes->kecamatan->kabkot->kabkot_name))}},
+                                                            <br> <strong>Prov. </strong>{{ucwords(strtolower($rDemplotMas->pelanggan->keldes->kecamatan->kabkot->provinsi->provinsi_name))}}
+                                                        </p>
+                                                        <span class="text-secondary text-xs font-weight-bold">{{$rDemplotMas->pelanggan->perusahaan_name}}</span>
+
                                                     </div>
                                                 </td>
-                                                <td class="align-middle text-sm">
-                                                    <p class="text-xs text-secondary mb-0">
-                                                        {{$rPelanggan->pelanggan_alamat}}, <br> <strong>Kel/Desa. </strong> {{ucwords(strtolower($rPelanggan->keldes->keldes_name))}}, <br>
-                                                        <strong>Kec. </strong>{{ucwords(strtolower($rPelanggan->keldes->kecamatan->kec_name))}}, <br> <strong>Kab/Kota. </strong>{{ucwords(strtolower($rPelanggan->keldes->kecamatan->kabkot->kabkot_name))}},
-                                                        <br> <strong>Prov. </strong>{{ucwords(strtolower($rPelanggan->keldes->kecamatan->kabkot->provinsi->provinsi_name))}}
-                                                    </p>
+                                                <td class="align-middle text-center text-sm">
+                                                    {{$rDemplotMas->no_bukti}} <br> ({{$rDemplotMas->tgl_bukti}})
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
-                                                    <span class="text-secondary text-xs font-weight-bold"> {{$rPelanggan->no_telp}}</span>
+                                                    {{$rDemplotMas->demplot_luas}} Hektar <br> ({{$rDemplotMas->demplot_pohon}} btg)
                                                 </td>
+
                                                 <td class="align-middle text-center text-sm">
-                                                    <span class="text-secondary text-xs font-weight-bold">{{$rPelanggan->perusahaan_name}}</span>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <span class="text-secondary text-xs font-weight-bold">{{$rPelanggan->perusahaan_telp}}</span>
+                                                    {{$rDemplotMas->demplot_tahapan}} <br> ({{$rDemplotMas->demplot_sesi}})
                                                 </td>
                                                 <td class="align-middle">
-                                                    <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click="create({{$rDemplotMas->demplot_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
                                                         <i class="material-icons">add</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                        <div class="ripple-container">&nbsp; detail</div>
                                                     </button>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="6">
                                                     <table class="table align-items-center mb-0">
                                                         <thead class="alert alert-secondary">
                                                             <tr>
@@ -133,60 +132,81 @@
                                                                 <th class="text-uppercase text-light text-xxs font-weight-bolder">
                                                                     No
                                                                 </th>
-                                                                <th class="text-uppercase text-light text-xxs font-weight-bolder">
-                                                                    ID Kebun</th>
                                                                 <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
-                                                                    Luas Kebun</th>
+                                                                    No Pohon</th>
                                                                 <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
-                                                                    Jumlah Pohon</th>
+                                                                    Usia Pohon</th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Pelapah</th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Tandan</th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Bakal Tandan</th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Spiral</th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Buah Dompet</th>
                                                                 <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach ($dKebun as $key => $rKebun)
-                                                            @if($rPelanggan->pelanggan_id == $rKebun->pelanggan_id)
+                                                            @foreach ($dDemplotDet as $key => $rDemplotDet)
+                                                            @if($rDemplotDet->demplot_id == $rDemplotMas->demplot_id)
                                                             <tr class="bg-light  p-2 text-white">
                                                                 <td></td>
                                                                 <td>
                                                                     <span class="text-dark text-xs font-weight-bold">{{$no++}}</span>
                                                                 </td>
                                                                 <td>
-                                                                    <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_id}}</span>
+                                                                    <span class="text-dark text-xs font-weight-bold">{{$rDemplotDet->no_pohon}}</span>
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm">
-                                                                    <span class="text-dark text-xs font-weight-bold"> {{$rKebun->kebun_luas}}</span>
+                                                                    <span class="text-dark text-xs font-weight-bold"> {{$rDemplotDet->pohon_usia}}</span>
+                                                                </td>
+                                                                <td class="align-middle text-center text-sm">
+                                                                    <span class="text-dark text-xs font-weight-bold"> {{$rDemplotDet->jumlah_pelapah}}</span>
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm ">
-                                                                    <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_pohon}}</span>
+                                                                    <span class="text-dark text-xs font-weight-bold">{{$rDemplotDet->jumlah_tandan}}</span>
+                                                                </td>
+                                                                <td class="align-middle text-center text-sm ">
+                                                                    <span class="text-dark text-xs font-weight-bold">{{$rDemplotDet->bakal_tandan}}</span>
+                                                                </td>
+                                                                <td class="align-middle text-center text-sm ">
+                                                                    <span class="text-dark text-xs font-weight-bold">{{$rDemplotDet->spiral}}</span>
+                                                                </td>
+                                                                <td class="align-middle text-center text-sm ">
+                                                                    <span class="text-dark text-xs font-weight-bold">{{$rDemplotDet->buah_dompet}}</span>
                                                                 </td>
                                                                 <td class="align-middle">
-                                                                    <button wire:click="edit({{$rKebun->kebun_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                                                    <button wire:click="edit({{$rDemplotDet->detail_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
                                                                         <i class="material-icons">edit</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
-                                                                    <button wire:click="destroy({{$rKebun->kebun_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                                    <button wire:click="destroy({{$rDemplotDet->detail_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
                                                                         <i class="material-icons">close</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
                                                                 </td>
                                                             </tr>
-                                                            <?php unset($dKebun[$key]); ?>
+                                                            <?php unset($rDemplotDet[$key]); ?>
                                                             @endif
                                                             @endforeach
+
                                                         </tbody>
                                                     </table>
                                                 </td>
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td colspan="7" align="center"> Data Pelanggan belum ada </td>
+                                                <td colspan="7" align="center"> Data Kebun belum ada </td>
                                             </tr>
                                             @endforelse
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="dataTable-bottom">
-                                    {{$dPelanggan->links()}}
+                                    {{$dDemplotMas->links()}}
                                 </div>
                             </div>
                         </div>

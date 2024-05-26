@@ -20,7 +20,7 @@ class Pelanggan extends Model
         return $this->belongsTo(Keldes::class, 'keldes_id', 'keldes_id');
     }
 
-    // public function kecamatan() {
-    //     return $this->belongsTo(Kecamatan::class, 'kec_id', 'kec_id');
-    // }
+    public function demplotmaster(){
+        return $this->hasMany(Demplotmaster::class, 'pelanggan_id', 'pelanggan_id');
+    }
 }

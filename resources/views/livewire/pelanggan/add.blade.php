@@ -3,7 +3,7 @@
         <h5 class="card-title">Tambah Data</h5>
     </div>
     <div class="card-body">
-        <form>
+        <form wire:submit.prevent="store" >
             <div class="row">
                 <div class="mb-3 col-md-6">
                     <label class="form-label">Nama Pelanggan</label>
@@ -112,7 +112,7 @@
                 </div>
 
             </div>
-            <button wire:click.prevent="store" type="submit" class="btn bg-gradient-dark">Simpan</button>
+            <button type="submit" class="btn bg-gradient-dark">Simpan</button>
             <button wire:click.prevent="cancel" type="button" class="btn bg-gradient-danger">Batal</button>
 
         </form>

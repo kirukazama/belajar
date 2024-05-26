@@ -14,7 +14,7 @@ class Pelanggan extends Component
 {
     public $pelanggan_id, $pelanggan_name, $pelanggan_alamat, $keldes_id, $no_telp, $perusahaan_name, $pimpinan_name, $perusahaan_telp;
     public $provinsi_id;
-    public $updatepelanggan = false, $createPelanggan = false;
+    public $updatePelanggan = false, $createPelanggan = false;
     public $pelanggan;
     public $cmbProv;
     public $provinsi;
@@ -58,7 +58,7 @@ class Pelanggan extends Component
         $this->cmbProv = $dCmbProv;
         $this->resetFields();
         $this->createPelanggan = true;
-        $this->updatepelanggan = false;
+        $this->updatePelanggan = false;
     }
 
     public function store()
@@ -110,7 +110,7 @@ class Pelanggan extends Component
                 $this->cmbKelDes= mKeldes::where('kec_id', $this->selectedkec)->get();
 
                 $this->createPelanggan = false;
-                $this->updatepelanggan = true;
+                $this->updatePelanggan = true;
             }
         } catch (\Exception $ex){
             session()->flash('error', 'Ada yang salah nih');
@@ -132,7 +132,7 @@ class Pelanggan extends Component
             ]);
             session()->flash('success', 'Berhasil Mengubah Data');
             $this->resetFields();
-            $this->updatepelanggan = false;
+            $this->updatePelanggan = false;
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Mengubah Data'. $ex);
         }
@@ -141,7 +141,7 @@ class Pelanggan extends Component
     public function cancel(){
         $this->resetFields();
         $this->createPelanggan = false;
-        $this->updatepelanggan = false;
+        $this->updatePelanggan = false;
     }
 
     public function destroy($id){

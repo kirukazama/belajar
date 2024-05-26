@@ -13,11 +13,11 @@ class Kabkot extends Model
     protected $primaryKey = 'kabkot_id';
     protected $fillable = ['kabkot_name', 'provinsi_id'];
 
-    public function kecamatan() {
+    public function kecamatan(){
         return $this->hasMany(Kecamatan::class, 'kabkot_id', 'kabkot_id');
     }
 
-    public function provinsi() {
+    public function provinsi(){
         return $this->belongsTo(Provinsi::class, 'provinsi_id', 'provinsi_id');
     }
 }

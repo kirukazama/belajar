@@ -9,7 +9,7 @@
                 <br>
                 @endif
 
-                @if($updatepelanggan)
+                @if($updatePelanggan)
                 @include('livewire.pelanggan.edit')
                 <br>
                 @endif
@@ -47,7 +47,7 @@
             </div>
 
             <div class="col-12">
-                @if(!$createPelanggan && !$updatepelanggan)
+                @if(!$createPelanggan && !$updatePelanggan)
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-lg-flex">
