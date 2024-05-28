@@ -65,16 +65,16 @@
                                         <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign
                                             in</button>
                                     </div>
-                                    <!-- <p class="mt-4 text-sm text-center">
+                                    <p class="mt-4 text-sm text-center">
                                         Don't have an account?
-                                        <a href="{{ route('register') }}"
+                                        <a href=""
                                             class="text-primary text-gradient font-weight-bold">Sign up</a>
-                                    </p> -->
-                                    <!-- <p class="text-sm text-center">
+                                    </p>
+                                    <p class="text-sm text-center">
                                         Forgot your password? Reset your password
                                         <a href="{{ route('password.forgot') }}"
                                             class="text-primary text-gradient font-weight-bold">here</a>
-                                    </p> -->
+                                    </p>
                                 </form>
                             </div>
                         </div>

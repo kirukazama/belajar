@@ -11,14 +11,15 @@ class Kebun extends Component
 {
 
     use WithPagination;
-    public $kebun_id, $kebun_luas, $kebun_pohon, $koordinat, $pelanggan_id, $pelanggan_name;
-    public $updateKebun = false, $createKebun = false;
+    public $kebun_id, $kebun_luas, $kebun_pohon, $koordinat, $pelanggan_id, $pelanggan_name, $id_tampil;
+    public $updateKebun, $createKebun, $showKebun, $unVisible = false;
+    public $visible = true;
+    public $dKebun = [];
 
     public function render()
     {
         $dPelanggan = mPelanggan::paginate(5);
-        $dKebun = mKebun::get();
-        return view('livewire.kebun.index')->with(compact('dPelanggan'))->with(compact('dKebun'));
+        return view('livewire.kebun.index')->with(compact('dPelanggan')); //->with(compact('dKebun'))
     }
 
     public function create($pelanggan_id)
@@ -42,9 +43,25 @@ class Kebun extends Component
 
     public function cancel()
     {
+        $this->dKebun = mKebun::where('pelanggan_id', $this->pelanggan_id)->get();
         $this->resetFields();
         $this->createKebun = false;
         $this->updateKebun = false;
+        $this->unVisible = false;
+    }
+
+    public function kebunShow($pelanggan_id){
+        $this->dKebun = mKebun::where('pelanggan_id', $pelanggan_id)->get();
+        $this->showKebun = true;
+        $this->visible = false;
+        $this->unVisible = true;
+        $this->id_tampil = $pelanggan_id;
+    }
+
+    public function kebunClose(){
+        $this->dKebun = [];
+        $this->showKebun = false;
+        $this->visible = true;
     }
 
     public function store()
@@ -59,6 +76,8 @@ class Kebun extends Component
                 'koordinat' => $this->koordinat
             ]);
 
+            $this->dKebun = mKebun::where('pelanggan_id', $this->pelanggan_id)->get();
+
             session()->flash('success', 'Berhasil Menambahkan Data');
             $this->resetFields();
             $this->createKebun = false;
@@ -67,10 +86,11 @@ class Kebun extends Component
         }
     }
 
-    public function destroy($id)
+    public function destroy($id, $pelanggan_id)
     {
         try {
             mKebun::findOrfail($id)->delete();
+            $this->dKebun = mKebun::where('pelanggan_id', $pelanggan_id)->get();
             session()->flash('success', 'Berhasil Menghapus Data');
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Menghapus Data');
@@ -110,6 +130,7 @@ class Kebun extends Component
                 'pelanggan_id' => $this->pelanggan_id
 
             ]);
+            $this->dKebun = mKebun::where('pelanggan_id', $this->pelanggan_id)->get();
             session()->flash('success', 'Berhasil Mengubah Data');
             $this->resetFields();
             $this->updateKebun = false;

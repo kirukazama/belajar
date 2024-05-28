@@ -33,8 +33,8 @@
                 </li>
                 @endauth
                 <!-- <li class="nav-item">
-                    <a class="nav-link me-2" href="{{ in_array(request()->route()->getName(), ['register','login', 'password.forgot','reset-password']) ? route('register') : 'static-sign-up' }}">
-                        <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
+                    <a class="nav-link me-2" href=" in_array(request()->route()->getName(), ['register','login', 'password.forgot','reset-password']) ? route('register') : 'static-sign-up' ">
+                        <i class="fas fa-user-circle opacity-6 text-dark me-1"></i> 
                         Sign Up
                     </a>
                 </li>

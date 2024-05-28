@@ -69,10 +69,10 @@
                                     <table class="table table-flush dataTable-table">
                                         <thead class="alert alert-success">
                                             <tr>
-                                                <th class="text-uppercase text-white text-xs font-weight-bolder">
+                                                <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     No
                                                 </th>
-                                                <th class="text-uppercase text-white text-xs font-weight-bolder">
+                                                <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Nama</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Alamat</th>
@@ -89,14 +89,14 @@
                                             @forelse ($dPelanggan as $key => $rPelanggan)
                                             <?php $no = 1; ?>
                                             <tr>
-                                                <td>
+                                                <td class="align-middle">
                                                     <div class="d-flex px-2 py-1">
                                                         <div class="d-flex flex-column justify-content-center">
                                                             <p class="mb-0 text-sm">{{$loop->iteration}}</p>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td class="align-middle">
                                                     <div class="d-flex flex-column justify-content-center">
                                                         <h6 class="mb-0 text-sm">{{$rPelanggan->pelanggan_name}}</h6>
                                                     </div>
@@ -121,36 +121,57 @@
                                                     <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
                                                         <i class="material-icons">add</i>
                                                         <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button> <br>
+                                                    @if($rPelanggan->pelanggan_id != $id_tampil || $visible)
+                                                    <button wire:click.prevent="kebunShow({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
                                                     </button>
+                                                    @else
+                                                    <button wire:click.prevent="kebunClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility_off</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button>
+                                                    @endif
                                                 </td>
                                             </tr>
+
+                                            @if($showKebun && $rPelanggan->pelanggan_id == $id_tampil)
                                             <tr>
-                                                <td colspan="7">
+                                                <td></td>
+                                                <td colspan="6">
                                                     <table class="table align-items-center mb-0">
                                                         <thead class="alert alert-secondary">
                                                             <tr>
-                                                                <th></th>
-                                                                <th class="text-uppercase text-light text-xxs font-weight-bolder">
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder"> # </th>
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     No
                                                                 </th>
-                                                                <th class="text-uppercase text-light text-xxs font-weight-bolder">
+                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     ID Kebun</th>
-                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Luas Kebun</th>
-                                                                <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Jumlah Pohon</th>
-                                                                <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($dKebun as $key => $rKebun)
-                                                            @if($rPelanggan->pelanggan_id == $rKebun->pelanggan_id)
                                                             <tr class="bg-light  p-2 text-white">
-                                                                <td></td>
-                                                                <td>
+                                                                <td class="align-middle text-center text-sm">
+                                                                    <button wire:click="edit({{$rKebun->kebun_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">edit</i>
+                                                                        <div class="ripple-container"></div>
+                                                                    </button>
+                                                                    <button wire:click="destroy({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">close</i>
+                                                                        <div class="ripple-container"></div>
+                                                                    </button>
+                                                                </td>
+                                                                <td class="align-middle text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$no++}}</span>
                                                                 </td>
-                                                                <td>
+                                                                <td class="align-middle text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_id}}</span>
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm">
@@ -159,24 +180,14 @@
                                                                 <td class="align-middle text-center text-sm ">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_pohon}}</span>
                                                                 </td>
-                                                                <td class="align-middle">
-                                                                    <button wire:click="edit({{$rKebun->kebun_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">edit</i>
-                                                                        <div class="ripple-container"></div>
-                                                                    </button>
-                                                                    <button wire:click="destroy({{$rKebun->kebun_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">close</i>
-                                                                        <div class="ripple-container"></div>
-                                                                    </button>
-                                                                </td>
                                                             </tr>
                                                             <?php unset($dKebun[$key]); ?>
-                                                            @endif
                                                             @endforeach
                                                         </tbody>
                                                     </table>
                                                 </td>
                                             </tr>
+                                            @endif
                                             @empty
                                             <tr>
                                                 <td colspan="7" align="center"> Data Pelanggan belum ada </td>

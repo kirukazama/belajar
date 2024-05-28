@@ -8,27 +8,65 @@ use App\Models\Demplotdetail as mDemplotDet;
 
 class Demplotdetail extends Component
 {
-    public $detail_id, $demplot_id, $no_pohon, $pohon_usia, $jumlah_pelapah, $jumlah_tandan, $bakal_tandan, $spiral, $buah_dompet;
+    public $detail_id, $demplot_id, $no_pohon, $pohon_usia, $jumlah_pelapah, $jumlah_tandan, $bakal_tandan, $spiral, $buah_dompet, $demplot_pohon;
     public $pelanggan_name, $kebun_id, $no_bukti, $tgl_bukti;
     public $updateDempDet = false, $createDempDet = false;
+    public $formData, $pelanggan_name_v, $kebun_id_v, $demplot_id_v, $no_bukti_v;
 
     public function render()
     {
-        $dDemplotMas = mDemplotMas::orderBy('tgl_bukti','asc')->paginate(8);
+        $dDemplotMas = mDemplotMas::orderBy('tgl_bukti', 'asc')->paginate(8);
         $dDemplotDet = mDemplotDet::get();
         return view('livewire.demplotdetail.index')->with(compact('dDemplotMas'))->with(compact('dDemplotDet'));
     }
 
     public function create($demplot_id)
     {
-        $dDemplotMas = mDemplotMas::where('demplot_id', $demplot_id)->first();
+        $this->fill([
+            'formData' => collect([[]])
+        ]);
         $this->resetFields();
+        $dDemplotMas = mDemplotMas::where('demplot_id', $demplot_id)->first();
+        $demplotDet = mDemplotDet::where('demplot_id', $dDemplotMas->demplot_id)->get();
+        $hitung = count($demplotDet);
+        if (!empty($demplotDet)) {
+            foreach ($demplotDet as $key => $detail) {
+                $gNoPohon = explode('/', $detail->no_pohon);
+                $this->formData->push([
+                    'demplot_id' => $detail->demplot_id,
+                    'no_bukti' => $gNoPohon[0],
+                    'detail_id' => $detail->detail_id,
+                    'no_pohon' => $gNoPohon[1],
+                    'pohon_usia' => $detail->pohon_usia,
+                    'jumlah_pelapah' => $detail->jumlah_pelapah,
+                    'jumlah_tandan' => $detail->jumlah_tandan,
+                    'bakal_tandan' => $detail->bakal_tandan,
+                    'spiral' => $detail->spiral,
+                    'buah_dompet' => $detail->buah_dompet,
+                ]);
+            }
+        }
+
+        for ($i = 1; $i <= $dDemplotMas->demplot_pohon - $hitung; $i++) {
+            $this->formData->push([
+                'demplot_id' => $dDemplotMas->demplot_id,
+                'no_bukti' => $dDemplotMas->no_bukti,
+                'detail_id' => $this->detail_id,
+                'no_pohon' => $i + $hitung,
+                'pohon_usia' => '',
+                'jumlah_pelapah' => '',
+                'jumlah_tandan' => '',
+                'bakal_tandan' => '',
+                'spiral' => '',
+                'buah_dompet' => '',
+            ]);
+        }
         $this->createDempDet = true;
         $this->updateDempDet = false;
-        $this->no_bukti = $dDemplotMas->no_bukti;
-        $this->kebun_id = $dDemplotMas->kebun_id;
-        $this->demplot_id = $demplot_id;
-        $this->pelanggan_name = $dDemplotMas->kebun->pelanggan->pelanggan_name;
+        $this->no_bukti_v = $dDemplotMas->no_bukti;
+        $this->kebun_id_v = $dDemplotMas->kebun_id;
+        $this->demplot_id_v = $demplot_id;
+        $this->pelanggan_name_v = $dDemplotMas->kebun->pelanggan->pelanggan_name;
     }
 
     public function resetFields()
@@ -54,27 +92,40 @@ class Demplotdetail extends Component
         $this->createDempDet = false;
     }
 
-    public function store()
+    public function simpanOrupdate()
+    {
+        //dd($this->formData);
+        foreach ($this->formData as $form) {
+            if (empty($form['detail_id'])) {
+                $this->store($form);
+            } else {
+                $this->update($form);
+            }
+        }
+    }
+
+    public function store($form)
     {
         //$this->validate();
 
         try {
-            mDemplotDet::create([
-                'demplot_id' => $this->demplot_id,
-                'no_pohon' => $this->no_bukti.'/'.$this->no_pohon,
-                'pohon_usia' => $this->pohon_usia,
-                'jumlah_pelapah' => $this->jumlah_pelapah,
-                'jumlah_tandan' => $this->jumlah_tandan,
-                'bakal_tandan' => $this->bakal_tandan,
-                'spiral' => $this->spiral,
-                'buah_dompet' => $this->buah_dompet,
-            ]);
-
+            if (!empty($form['no_pohon']) && !empty($form['pohon_usia']) && !empty($form['jumlah_pelapah']) && !empty($form['jumlah_tandan']) && !empty($form['bakal_tandan']) && !empty($form['spiral']) && !empty($form['buah_dompet'])) {
+                mDemplotDet::create([
+                    'demplot_id' => $form['demplot_id'],
+                    'no_pohon' => $form['no_bukti'] . '/' . $form['no_pohon'],
+                    'pohon_usia' => $form['pohon_usia'],
+                    'jumlah_pelapah' => $form['jumlah_pelapah'],
+                    'jumlah_tandan' => $form['jumlah_tandan'],
+                    'bakal_tandan' => $form['bakal_tandan'],
+                    'spiral' => $form['spiral'],
+                    'buah_dompet' => $form['buah_dompet'],
+                ]);
+            }
             session()->flash('success', 'Berhasil Menambahkan Data');
             $this->resetFields();
             $this->createDempDet = false;
         } catch (\Exception $ex) {
-            session()->flash('error', 'Gagal Menambahkan Data'.$ex);
+            session()->flash('error', 'Gagal Menambahkan Data' . $ex);
         }
     }
 
@@ -114,28 +165,29 @@ class Demplotdetail extends Component
                 $this->createDempDet = false;
             }
         } catch (\Exception $ex) {
-            session()->flash('error', 'Ada yang salah nih'. $ex);
+            session()->flash('error', 'Ada yang salah nih' . $ex);
         }
     }
 
-    public function update(){
+    public function update($form)
+    {
         //$this->validate();
 
         try {
-            mDemplotDet::where('detail_id',$this->detail_id)->update([
-                'jumlah_pelapah' => $this->jumlah_pelapah,
-                'no_pohon' => $this->no_bukti.'/'.$this->no_pohon,
-                'pohon_usia' => $this->pohon_usia,
-                'jumlah_tandan' => $this->jumlah_tandan,
-                'bakal_tandan' => $this->bakal_tandan,
-                'spiral' => $this->spiral,
-                'buah_dompet' => $this->buah_dompet,
+            mDemplotDet::where('detail_id', $form['detail_id'])->update([
+                'jumlah_pelapah' => $form['jumlah_pelapah'],
+                'no_pohon' => $form['no_bukti'] . '/' . $form['no_pohon'],
+                'pohon_usia' => $form['pohon_usia'],
+                'jumlah_tandan' => $form['jumlah_tandan'],
+                'bakal_tandan' => $form['bakal_tandan'],
+                'spiral' => $form['spiral'],
+                'buah_dompet' => $form['buah_dompet'],
             ]);
             session()->flash('success', 'Berhasil Mengubah Data');
             $this->resetFields();
             $this->updateDempDet = false;
         } catch (\Exception $ex) {
-            session()->flash('error', 'Gagal Mengubah Data'. $ex);
+            session()->flash('error', 'Gagal Mengubah Data' . $ex);
         }
     }
 }

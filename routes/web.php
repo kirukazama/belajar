@@ -32,7 +32,7 @@ Route::get('/', function () {
 Route::get('forgot-password', ForgotPassword::class)->middleware('guest')->name('password.forgot');
 Route::get('reset-password/{id}', ResetPassword::class)->middleware('signed')->name('reset-password');
 
-Route::get('sign-up', Register::class)->middleware('guest')->name('register');
+Route::get('mandaftar', Register::class)->middleware('guest')->name('mandaftar');
 Route::get('sign-in', Login::class)->middleware('guest')->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
