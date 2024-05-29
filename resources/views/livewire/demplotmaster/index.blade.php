@@ -13,6 +13,11 @@
                 @include('livewire.demplotmaster.edit')
                 <br>
                 @endif
+
+                @if($createDempDet)
+                @include('livewire.demplotmaster.addpohon')
+                <br>
+                @endif
             </div>
         </div>
         <div class="row">
@@ -47,7 +52,7 @@
             </div>
 
             <div class="col-12">
-                @if(!$createDemplot && !$updateDemplot)
+                @if(!$createDemplot && !$updateDemplot && !$createDempDet)
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-lg-flex">
@@ -187,6 +192,11 @@
                                                                     <button wire:click="destroy({{$rDemplot->demplot_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
                                                                         <i class="material-icons">close</i>
                                                                         <div class="ripple-container"></div>
+                                                                    </button>
+                                                                    <br>
+                                                                    <button wire:click="createpohon({{$rDemplot->demplot_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">add</i>
+                                                                        <div class="ripple-container">&nbsp; Pohon</div>
                                                                     </button>
                                                                 </td>
                                                             </tr>
