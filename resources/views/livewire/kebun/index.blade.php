@@ -148,7 +148,7 @@
                                                                     No
                                                                 </th>
                                                                 <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
-                                                                    ID Kebun</th>
+                                                                    Alamat Kebun</th>
                                                                 <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Luas Kebun</th>
                                                                 <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
@@ -171,8 +171,12 @@
                                                                 <td class="align-middle text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$no++}}</span>
                                                                 </td>
-                                                                <td class="align-middle text-center text-sm">
-                                                                    <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_id}}</span>
+                                                                <td class="align-middle text-sm">
+                                                                    <p class="text-xs text-secondary mb-0">
+                                                                        {{$rKebun->pelanggan_alamat}}, <br> <strong>Kel/Desa. </strong> {{ucwords(strtolower($rKebun->keldes->keldes_name))}}, <br>
+                                                                        <strong>Kec. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kec_name))}}, <br> <strong>Kab/Kota. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kabkot->kabkot_name))}},
+                                                                        <br> <strong>Prov. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kabkot->provinsi->provinsi_name))}}
+                                                                    </p>
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold"> {{$rKebun->kebun_luas}}</span>

@@ -5,16 +5,28 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Kebun as mKebun;
 use App\Models\Pelanggan as mPelanggan;
+use App\Models\Provinsi as mProvinsi;
+use App\Models\Kabkot as mKabkot;
+use App\Models\Kecamatan as mKec;
+use App\Models\Keldes as mKeldes;
 use Livewire\WithPagination;
 
 class Kebun extends Component
 {
 
     use WithPagination;
-    public $kebun_id, $kebun_luas, $kebun_pohon, $koordinat, $pelanggan_id, $pelanggan_name, $id_tampil;
+    public $kebun_id, $kebun_luas, $kebun_pohon, $koordinat, $pelanggan_id, $pelanggan_name, $id_tampil, $kebun_alamat, $keldes_id;
     public $updateKebun, $createKebun, $showKebun, $unVisible = false;
     public $visible = true;
     public $dKebun = [];
+    public $cmbProv;
+    public $provinsi;
+    public $cmbkabkot;
+    public $cmbKec;
+    public $cmbKelDes;
+    public $selectedprovinsi = null;
+    public $selectedkabkot = null;
+    public $selectedkec = null;
 
     public function render()
     {
@@ -25,6 +37,8 @@ class Kebun extends Component
     public function create($pelanggan_id)
     {
         $dPelanggan = mPelanggan::where('pelanggan_id', $pelanggan_id)->first();
+        $dCmbProv = mProvinsi::select('provinsi_id', 'provinsi_name')->orderBy('provinsi_name','asc')->get();
+        $this->cmbProv = $dCmbProv;
         $this->resetFields();
         $this->createKebun = true;
         $this->updateKebun = false;
@@ -73,6 +87,8 @@ class Kebun extends Component
                 'pelanggan_id' => $this->pelanggan_id,
                 'kebun_luas' => $this->kebun_luas,
                 'kebun_pohon' => $this->kebun_pohon,
+                'kebun_alamat' => $this->kebun_alamat,
+                'keldes_id' => $this->keldes_id,
                 'koordinat' => $this->koordinat
             ]);
 
@@ -110,12 +126,23 @@ class Kebun extends Component
                 $this->kebun_luas = $kebun->kebun_luas;
                 $this->kebun_pohon = $kebun->kebun_pohon;
                 $this->koordinat = $kebun->koordinat;
+                $this->kebun_alamat = $kebun->kebun_alamat;
+                $this->keldes_id = $kebun->keldes_id;
+
+                $this->selectedprovinsi = $kebun->keldes->kecamatan->kabkot->provinsi_id;
+                $this->selectedkabkot = $kebun->keldes->kecamatan->kabkot_id;
+                $this->selectedkec = $kebun->keldes->kec_id;
+
+                $this->cmbProv = mProvinsi::select('provinsi_id', 'provinsi_name')->orderBy('provinsi_name','asc')->get();
+                $this->cmbkabkot= mKabkot::where('provinsi_id', $this->selectedprovinsi)->get();
+                $this->cmbKec= mKec::where('kabkot_id', $this->selectedkabkot)->get();
+                $this->cmbKelDes= mKeldes::where('kec_id', $this->selectedkec)->get();
 
                 $this->createKebun = false;
                 $this->updateKebun = true;
             }
         } catch (\Exception $ex) {
-            session()->flash('error', 'Ada yang salah nih');
+            session()->flash('error', 'Ada yang salah nih <br>'. $ex);
         }
     }
 
@@ -137,5 +164,17 @@ class Kebun extends Component
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Mengubah Data'. $ex);
         }
+    }
+
+    public function updatedSelectedProvinsi() {
+        $this->cmbkabkot= mKabkot::where('provinsi_id', $this->selectedprovinsi)->get();
+    }
+
+    public function updatedSelectedKabkot() {
+        $this->cmbKec= mKec::where('kabkot_id', $this->selectedkabkot)->get();
+    }
+
+    public function updatedSelectedKec() {
+        $this->cmbKelDes= mKeldes::where('kec_id', $this->selectedkec)->get();
     }
 }

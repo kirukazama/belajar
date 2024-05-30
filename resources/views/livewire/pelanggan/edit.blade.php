@@ -29,9 +29,6 @@
                         <option value="{{$prov->provinsi_id}}" wire:key="prov-{{ $prov->provinsi_id }}">{{ ucwords(strtolower($prov->provinsi_name)) }}</option>
                         @endforeach
                     </select>
-                    @error('keldes_id')
-                    <p class='text-danger inputerror'>{{ $message }} </p>
-                    @enderror
                 </div>
 
                 @if(!is_null($selectedprovinsi))
@@ -43,9 +40,6 @@
                         <option value="{{$kabkot->kabkot_id}}">{{ ucwords(strtolower($kabkot->kabkot_name)) }}</option>
                         @endforeach
                     </select>
-                    @error('keldes_id')
-                    <p class='text-danger inputerror'>{{ $message }} </p>
-                    @enderror
                 </div>
                 @endif
 
@@ -58,9 +52,6 @@
                         <option value="{{$kec->kec_id}}">{{ ucwords(strtolower($kec->kec_name)) }}</option>
                         @endforeach
                     </select>
-                    @error('keldes_id')
-                    <p class='text-danger inputerror'>{{ $message }} </p>
-                    @enderror
                 </div>
                 @endif
 
@@ -73,9 +64,6 @@
                         <option value="{{$keldes->keldes_id}}">{{ ucwords(strtolower($keldes->keldes_name)) }}</option>
                         @endforeach
                     </select>
-                    @error('keldes_id')
-                    <p class='text-danger inputerror'>{{ $message }} </p>
-                    @enderror
                 </div>
                 @endif
 
