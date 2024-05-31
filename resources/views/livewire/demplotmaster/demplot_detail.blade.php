@@ -101,12 +101,12 @@
                             @foreach ($demplotDet as $key=>$demplot)
                             <tr class="bg-light  p-2 text-white">
                                 <td class="align-middle">
-                                    <button wire:click="editPohon({{$demplot->detail_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                    <button wire:click="editPohon({{$demplot->detail_id}})" type="button" class="btn btn-success btn-link" data-original-title="" title="">
                                         <i class="material-icons">edit</i>
                                         <div class="ripple-container"></div>
                                     </button>
-                                    <button wire:click="destroyPohon({{$demplot->detail_id}}, {{$demplot_id_v}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                        <i class="material-icons">close</i>
+                                    <button wire:click="destroyPohon({{$demplot->detail_id}}, {{$demplot_id_v}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link" data-original-title="" title="">
+                                        <i class="material-icons">delete</i>
                                         <div class="ripple-container"></div>
                                     </button>
                                 </td>
@@ -135,12 +135,12 @@
                             @endforeach
                             @for ($i = 1; $i <= $demplot_pohon_h - $hitung; $i++) <tr class="bg-light  p-2 text-white">
                                 <td class="align-middle">
-                                    <button wire:click="editPohon('-',{{$i + $hitung}},'{{$no_bukti_v}}',{{$demplot_id_v}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                    <button wire:click="editPohon('-',{{$i + $hitung}},'{{$no_bukti_v}}',{{$demplot_id_v}})" type="button" class="btn btn-success btn-link" data-original-title="" title="">
                                         <i class="material-icons">edit</i>
                                         <div class="ripple-container"></div>
                                     </button>
-                                    <button wire:click="destroyPohon('-', {{$demplot_id_v}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                        <i class="material-icons">close</i>
+                                    <button wire:click="destroyPohon('-', {{$demplot_id_v}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link" data-original-title="" title="">
+                                        <i class="material-icons">delete</i>
                                         <div class="ripple-container"></div>
                                     </button>
                                 </td>

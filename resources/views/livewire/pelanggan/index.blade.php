@@ -54,7 +54,7 @@
                             <div></div>
                             <div class="ms-auto my-auto mt-lg-0 mt-4">
                                 <div class="ms-auto my-auto">
-                                    <button wire:click="create" class="btn bg-gradient-dark btn-sm mb-0"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Pelanggan</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -69,6 +69,7 @@
                                     <table class="table table-flush dataTable-table" id="products-list">
                                         <thead class="thead-light">
                                             <tr>
+                                                <th class="text-secondary text-center"> <button wire:click="create" class="btn btn-dark btn-link"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Klien</button> </th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     No
                                                 </th>
@@ -82,12 +83,21 @@
                                                     Perusahaan</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     Telepon Perusahaan</th>
-                                                <th class="text-secondary opacity-7"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($dPelanggan as $rPelanggan)
                                             <tr>
+                                                <td class="align-middle text-center">
+                                                    <button wire:click="edit({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-success btn-link" data-original-title="" title="">
+                                                        <i class="material-icons">edit</i>
+                                                        <div class="ripple-container"></div>
+                                                    </button>
+                                                    <button wire:click="destroy({{$rPelanggan->pelanggan_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link" data-original-title="" title="">
+                                                        <i class="material-icons">close</i>
+                                                        <div class="ripple-container"></div>
+                                                    </button>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex px-2 py-1">
                                                         <div class="d-flex flex-column justify-content-center">
@@ -115,16 +125,6 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <span class="text-secondary text-xs font-weight-bold">{{$rPelanggan->perusahaan_telp}}</span>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <button wire:click="edit({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">edit</i>
-                                                        <div class="ripple-container"></div>
-                                                    </button>
-                                                    <button wire:click="destroy({{$rPelanggan->pelanggan_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">close</i>
-                                                        <div class="ripple-container"></div>
-                                                    </button>
                                                 </td>
                                             </tr>
                                             @empty

@@ -56,9 +56,19 @@
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-lg-flex">
-                            <div></div>
+                            <div class="mb-3 col-md-3">
+                                <div>
+                                    <select class="form-select border border-2 p-2" wire:model.live="selectedPelanggan">
+                                        <option value="">Pilih Klien</option>
+                                        @foreach($dCmbKlien as $cmbKlien)
+                                        <option value="{{$cmbKlien->pelanggan_id}}">{{$cmbKlien->pelanggan_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="ms-auto my-auto mt-lg-0 mt-4">
                                 <div class="ms-auto my-auto">
+
 
                                 </div>
                             </div>
@@ -78,6 +88,9 @@
                                                 <th class="text-uppercase text-white text-xs font-weight-bolder">
                                                     No
                                                 </th>
+                                                <th class="text-uppercase text-white text-xs font-weight-bolder">
+                                                    Nama Pemilik
+                                                </th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Alamat Kebun</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
@@ -91,19 +104,19 @@
                                             <?php $no = 1; ?>
                                             <tr>
                                                 <td class="align-middle text-center text-sm">
-                                                    <button wire:click="create({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click="create({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" type="button" class="btn btn-dark btn-link" data-original-title="" title="">
                                                         <i class="material-icons">add</i>
-                                                        <div class="ripple-container">&nbsp; Proses</div>
+                                                        <!-- <div class="ripple-container">&nbsp; Proses</div> -->
                                                     </button>
                                                     @if($rKebun->kebun_id != $id_tampil || $visible)
-                                                    <button wire:click.prevent="demplotShow({{$rKebun->kebun_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click.prevent="demplotShow({{$rKebun->kebun_id}})" type="button" class="btn btn-info btn-link" data-original-title="" title="">
                                                         <i class="material-icons">visibility</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                        <!-- <div class="ripple-container">&nbsp; Kebun</div> -->
                                                     </button>
                                                     @else
-                                                    <button wire:click.prevent="demplotClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click.prevent="demplotClose()" type="button" class="btn btn-warning btn-link" data-original-title="" title="">
                                                         <i class="material-icons">visibility_off</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                        <!-- <div class="ripple-container">&nbsp; Kebun</div> -->
                                                     </button>
                                                     @endif
                                                 </td>
@@ -113,6 +126,11 @@
                                                             <p class="mb-0 text-sm">{{$loop->iteration}}</p>
                                                         </div>
                                                     </div>
+                                                </td>
+                                                <td class="align-middle text-sm">
+                                                    <p class="text-xs text-secondary mb-0">
+                                                        <strong> {{$rKebun->pelanggan->pelanggan_name}} </strong>
+                                                    </p>
                                                 </td>
                                                 <td class="align-middle text-sm">
                                                     <p class="text-xs text-secondary mb-0">
@@ -130,7 +148,7 @@
                                             </tr>
                                             @if($showDemplot && $rKebun->kebun_id == $id_tampil)
                                             <tr>
-                                                <td colspan="5">
+                                                <td colspan="6">
                                                     <table class="table align-items-center mb-0">
                                                         <thead class="alert alert-secondary">
                                                             <tr>
@@ -158,18 +176,16 @@
                                                             <tr class="bg-light  p-2 text-white">
                                                                 <td></td>
                                                                 <td class="align-middle text-center text-sm">
-                                                                    <button wire:click="edit({{$rDemplot->demplot_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                                                    <button wire:click="edit({{$rDemplot->demplot_id}})" type="button" class="btn btn-success btn-link" data-original-title="" title="">
                                                                         <i class="material-icons">edit</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
-                                                                    <button wire:click="destroy({{$rDemplot->demplot_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">close</i>
+                                                                    <button wire:click="destroy({{$rDemplot->demplot_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link" data-original-title="" title="">
+                                                                        <i class="material-icons">delete</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
-                                                                    <br>
-                                                                    <button wire:click="detailPohon({{$rDemplot->demplot_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">add</i>
-                                                                        <div class="ripple-container">&nbsp; Demplot</div>
+                                                                    <button wire:click="detailPohon({{$rDemplot->demplot_id}})" type="button" class="btn btn-info btn-link" data-original-title="" title="">
+                                                                        <i class="material-icons">park</i>
                                                                     </button>
                                                                 </td>
                                                                 <td class="text-center text-sm">
@@ -221,3 +237,17 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+
+<script>
+    $(document).ready(function() {
+        $('#select2').select2();
+        $('#select2').on('change', function(e) {
+            var data = $('#select2').select2("val");
+
+        });
+    });
+</script>
+
+@endpush

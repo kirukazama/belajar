@@ -90,19 +90,19 @@
                                             <?php $no = 1; ?>
                                             <tr>
                                                 <td class="align-middle text-center text-sm">
-                                                    <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link" data-original-title="" title="">
                                                         <i class="material-icons">add</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
-                                                    </button> <br>
+                                                        <!-- <div class="ripple-container">&nbsp; Kebun</div> -->
+                                                    </button>
                                                     @if($rPelanggan->pelanggan_id != $id_tampil || $visible)
-                                                    <button wire:click.prevent="kebunShow({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click.prevent="kebunShow({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-info btn-link" data-original-title="" title="">
                                                         <i class="material-icons">visibility</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                        <!-- <div class="ripple-container">&nbsp; Kebun</div> -->
                                                     </button>
                                                     @else
-                                                    <button wire:click.prevent="kebunClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                    <button wire:click.prevent="kebunClose()" type="button" class="btn btn-warning btn-link" data-original-title="" title="">
                                                         <i class="material-icons">visibility_off</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                        <!-- <div class="ripple-container">&nbsp; Kebun</div> -->
                                                     </button>
                                                     @endif
                                                 </td>
@@ -137,8 +137,7 @@
                                             </tr>
                                             @if($showKebun && $rPelanggan->pelanggan_id == $id_tampil)
                                             <tr>
-                                                <td></td>
-                                                <td colspan="6">
+                                                <td colspan="7">
                                                     <table class="table align-items-center mb-0">
                                                         <thead class="alert alert-secondary">
                                                             <tr>
@@ -158,11 +157,11 @@
                                                             @foreach ($dKebun as $key => $rKebun)
                                                             <tr class="bg-light  p-2 text-white">
                                                                 <td class="align-middle text-center text-sm">
-                                                                    <button wire:click="edit({{$rKebun->kebun_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                                                    <button wire:click="edit({{$rKebun->kebun_id}})" type="button" class="btn btn-success btn-link" data-original-title="" title="">
                                                                         <i class="material-icons">edit</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
-                                                                    <button wire:click="destroy({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                                    <button wire:click="destroy({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link" data-original-title="" title="">
                                                                         <i class="material-icons">close</i>
                                                                         <div class="ripple-container"></div>
                                                                     </button>
