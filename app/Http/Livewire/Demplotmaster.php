@@ -18,14 +18,21 @@ class Demplotmaster extends Component
     public $visible = true;
     public $showDemplot, $unVisible, $pohondetail = false;
     public $dDemplot = [];
-    public $id_tampil;
+    public $id_tampil, $pelanggan_id_f;
+    public $selectedPelanggan = null;
     public $demplotDet, $hitung, $demplot_pohon_h;
 
     public function render()
     {
-        $dKebun = mKebun::paginate(5);
+        // $dKebun = mKebun::paginate(5);
+        $dCmbKlien = mPelanggan::select('pelanggan_id', 'pelanggan_name')->orderBy('pelanggan_name', 'asc')->get();
+
+        $dKebun = mKebun::when($this->selectedPelanggan, function ($query) {
+            $query->where('pelanggan_id', $this->selectedPelanggan);
+        })->paginate(5);
+
         //$dDemplot = mDemplotMas::orderBy('tgl_bukti', 'asc')->get();
-        return view('livewire.demplotmaster.index')->with(compact('dKebun')); //->with(compact('dDemplot'))
+        return view('livewire.demplotmaster.index')->with(compact('dKebun'))->with(compact('dCmbKlien')); //->with(compact('dDemplot'))
     }
 
     public function create($kebun_id, $pelanggan_id)
@@ -61,8 +68,8 @@ class Demplotmaster extends Component
         $this->createDemplot = false;
         $this->updateDemplot = false;
         $this->createDempDet = false;
-        $this->unVisible = false;
-        $this->visible = true;
+        $this->unVisible = true;
+        $this->visible = false;
         $this->pohondetail = false;
         $this->resetFieldsPohon();
     }
@@ -315,7 +322,7 @@ class Demplotmaster extends Component
     public function destroyPohon($id, $demplot_id = '')
     {
         try {
-            if($id == '-'){
+            if ($id == '-') {
                 session()->flash('error', 'Data tidak ada karen belum disimpan di database');
             } else {
                 mDemplotDet::findOrfail($id)->delete();
@@ -324,9 +331,9 @@ class Demplotmaster extends Component
                 $this->hitung = count($this->demplotDet);
                 $this->demplot_pohon_h = $dDemplotMas->demplot_pohon;
                 session()->flash('success', 'Berhasil Menghapus Data');
-            }            
+            }
         } catch (\Exception $ex) {
-            session()->flash('error', 'Gagal Menghapus Data'. $ex);
+            session()->flash('error', 'Gagal Menghapus Data' . $ex);
         }
     }
 
