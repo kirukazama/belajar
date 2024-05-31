@@ -14,6 +14,7 @@
                     <div class="mb-3 col-md-3">
                         <label class="form-label">ID Kebun</label>
                         <input wire:model="kebun_id_v" type="number" class="form-control border border-2 p-2" disabled>
+
                     </div>
 
                     <div class="mb-3 col-md-3">
@@ -32,7 +33,7 @@
                             <tr>
                                 <th>
                                     <button wire:click.prevent="cancel" type="button" class="btn bg-gradient-danger"><i class="material-icons">close</i></button>
-                                    <button wire:click="simpanOrupdate" type="button" class="btn bg-gradient-success"><i class="material-icons">save</i></button>
+                                    <!-- <button wire:click="simpanOrupdate" type="button" class="btn bg-gradient-success"><i class="material-icons">save</i></button> -->
                                 </th>
                                 <th class="text-uppercase text-white text-xs font-weight-bolder">
                                     No Pohon
@@ -62,11 +63,12 @@
                             @if($key !== 0)
                             <tr>
                                 <form>
+                                    <input wire:model="kebun_id" type="hidden" class="form-control border border-2 p-2" readonly>
                                     <input wire:model="formData.{{$key}}.demplot_id" type="hidden" class="form-control border border-2 p-2" readonly>
                                     <input wire:model="formData.{{$key}}.detail_id" type="hidden" class="form-control border border-2 p-2" readonly>
                                     <input wire:model="formData.{{$key}}.no_bukti" type="hidden" class="form-control border border-2 p-2" readonly>
                                     <td>
-                                        
+
                                     </td>
                                     <td>
                                         <input wire:model="formData.{{$key}}.no_pohon" type="number" class="form-control border border-2 p-2" readonly>

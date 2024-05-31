@@ -69,6 +69,7 @@
                                     <table class="table table-flush dataTable-table">
                                         <thead class="alert alert-success">
                                             <tr>
+                                                <th class="text-white text-center text-sm">#</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     No
                                                 </th>
@@ -82,13 +83,29 @@
                                                     Perusahaan</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Telepon Perusahaan</th>
-                                                <th class="text-white"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($dPelanggan as $key => $rPelanggan)
                                             <?php $no = 1; ?>
                                             <tr>
+                                                <td class="align-middle text-center text-sm">
+                                                    <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">add</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button> <br>
+                                                    @if($rPelanggan->pelanggan_id != $id_tampil || $visible)
+                                                    <button wire:click.prevent="kebunShow({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button>
+                                                    @else
+                                                    <button wire:click.prevent="kebunClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility_off</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button>
+                                                    @endif
+                                                </td>
                                                 <td class="align-middle">
                                                     <div class="d-flex px-2 py-1">
                                                         <div class="d-flex flex-column justify-content-center">
@@ -117,25 +134,7 @@
                                                 <td class="align-middle text-center">
                                                     <span class="text-secondary text-xs font-weight-bold">{{$rPelanggan->perusahaan_telp}}</span>
                                                 </td>
-                                                <td class="align-middle">
-                                                    <button wire:click="create({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">add</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
-                                                    </button> <br>
-                                                    @if($rPelanggan->pelanggan_id != $id_tampil || $visible)
-                                                    <button wire:click.prevent="kebunShow({{$rPelanggan->pelanggan_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">visibility</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
-                                                    </button>
-                                                    @else
-                                                    <button wire:click.prevent="kebunClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">visibility_off</i>
-                                                        <div class="ripple-container">&nbsp; Kebun</div>
-                                                    </button>
-                                                    @endif
-                                                </td>
                                             </tr>
-
                                             @if($showKebun && $rPelanggan->pelanggan_id == $id_tampil)
                                             <tr>
                                                 <td></td>

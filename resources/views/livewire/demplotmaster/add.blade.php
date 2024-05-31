@@ -69,8 +69,6 @@
                         <option value="I">Tahap I</option>
                         <option value="II">Tahap II</option>
                         <option value="III">Tahap III</option>
-                        <option value="IV">Tahap IV</option>
-                        <option value="V">Tahap V</option>
                     </select>
                     @error('demplot_tahapan')
                     <p class='text-danger inputerror'>{{ $message }} </p>

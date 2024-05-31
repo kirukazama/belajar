@@ -12,15 +12,20 @@ class Demplotmaster extends Component
 {
 
     public $demplot_id, $no_bukti, $tgl_bukti, $pelanggan_id, $pelanggan_name, $kebun_id, $demplot_luas, $demplot_pohon, $demplot_tahapan, $demplot_sesi, $jenis_pupuk;
-    public $updateDemplot = false, $createDemplot = false, $createDempDet = false;
+    public $updateDemplot = false, $createDemplot = false, $createDempDet, $updateDempDet = false;
     public $formData, $pelanggan_name_v, $kebun_id_v, $demplot_id_v, $no_bukti_v;
     public $detail_id, $no_pohon, $pohon_usia, $jumlah_pelapah, $jumlah_tandan, $bakal_tandan, $spiral, $buah_dompet;
+    public $visible = true;
+    public $showDemplot, $unVisible, $pohondetail = false;
+    public $dDemplot = [];
+    public $id_tampil;
+    public $demplotDet, $hitung, $demplot_pohon_h;
 
     public function render()
     {
         $dKebun = mKebun::paginate(5);
-        $dDemplot = mDemplotMas::orderBy('tgl_bukti', 'asc')->get();
-        return view('livewire.demplotmaster.index')->with(compact('dKebun'))->with(compact('dDemplot'));
+        //$dDemplot = mDemplotMas::orderBy('tgl_bukti', 'asc')->get();
+        return view('livewire.demplotmaster.index')->with(compact('dKebun')); //->with(compact('dDemplot'))
     }
 
     public function create($kebun_id, $pelanggan_id)
@@ -51,10 +56,14 @@ class Demplotmaster extends Component
 
     public function cancel()
     {
+        $this->dDemplot = mDemplotMas::where('kebun_id', $this->kebun_id)->get();
         $this->resetFields();
         $this->createDemplot = false;
         $this->updateDemplot = false;
         $this->createDempDet = false;
+        $this->unVisible = false;
+        $this->visible = true;
+        $this->pohondetail = false;
         $this->resetFieldsPohon();
     }
 
@@ -92,6 +101,7 @@ class Demplotmaster extends Component
     {
         try {
             mDemplotMas::findOrfail($id)->delete();
+            $this->dDemplot = mDemplotMas::where('kebun_id', $this->kebun_id)->get();
             session()->flash('success', 'Berhasil Menghapus Data');
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Menghapus Data');
@@ -139,6 +149,7 @@ class Demplotmaster extends Component
                 'jenis_pupuk' => $this->jenis_pupuk,
 
             ]);
+            $this->dDemplot = mDemplotMas::where('kebun_id', $this->kebun_id)->get();
             session()->flash('success', 'Berhasil Mengubah Data');
             $this->resetFields();
             $this->updateDemplot = false;
@@ -147,52 +158,18 @@ class Demplotmaster extends Component
         }
     }
 
-    public function createpohon($demplot_id)
+    public function detailPohon($demplot_id)
     {
-        $this->fill([
-            'formData' => collect([[]])
-        ]);
-        $this->resetFieldsPohon();
         $dDemplotMas = mDemplotMas::where('demplot_id', $demplot_id)->first();
-        $demplotDet = mDemplotDet::where('demplot_id', $dDemplotMas->demplot_id)->get();
-        $hitung = count($demplotDet);
-        if (!empty($demplotDet)) {
-            foreach ($demplotDet as $key => $detail) {
-                $gNoPohon = explode('/', $detail->no_pohon);
-                $this->formData->push([
-                    'demplot_id' => $detail->demplot_id,
-                    'no_bukti' => $gNoPohon[0],
-                    'detail_id' => $detail->detail_id,
-                    'no_pohon' => $gNoPohon[1],
-                    'pohon_usia' => $detail->pohon_usia,
-                    'jumlah_pelapah' => $detail->jumlah_pelapah,
-                    'jumlah_tandan' => $detail->jumlah_tandan,
-                    'bakal_tandan' => $detail->bakal_tandan,
-                    'spiral' => $detail->spiral,
-                    'buah_dompet' => $detail->buah_dompet,
-                ]);
-            }
-        }
-
-        for ($i = 1; $i <= $dDemplotMas->demplot_pohon - $hitung; $i++) {
-            $this->formData->push([
-                'demplot_id' => $dDemplotMas->demplot_id,
-                'no_bukti' => $dDemplotMas->no_bukti,
-                'detail_id' => $this->detail_id,
-                'no_pohon' => $i + $hitung,
-                'pohon_usia' => '',
-                'jumlah_pelapah' => '',
-                'jumlah_tandan' => '',
-                'bakal_tandan' => '',
-                'spiral' => '',
-                'buah_dompet' => '',
-            ]);
-        }
-        $this->createDempDet = true;
-        $this->no_bukti_v = $dDemplotMas->no_bukti;
+        $this->demplotDet = mDemplotDet::where('demplot_id', $dDemplotMas->demplot_id)->get();
+        $this->hitung = count($this->demplotDet);
+        $this->demplot_pohon_h = $dDemplotMas->demplot_pohon;
+        $this->no_bukti_v =  $dDemplotMas->no_bukti;
         $this->kebun_id_v = $dDemplotMas->kebun_id;
+        $this->kebun_id = $dDemplotMas->kebun_id;
         $this->demplot_id_v = $demplot_id;
         $this->pelanggan_name_v = $dDemplotMas->kebun->pelanggan->pelanggan_name;
+        $this->pohondetail = true;
     }
 
     public function resetFieldsPohon()
@@ -211,62 +188,162 @@ class Demplotmaster extends Component
         $this->tgl_bukti = '';
     }
 
-    public function simpanOrupdate()
+    public function cancelPohonF()
     {
-        //dd($this->formData);
-        foreach ($this->formData as $form) {
-            if (empty($form['detail_id'])) {
-                $this->storePohon($form);
+        $this->resetPohonF();
+        $this->updateDempDet = false;
+    }
+
+    public function resetPohonF()
+    {
+        $this->demplot_id = '';
+        $this->pelanggan_name = '';
+        $this->jumlah_pelapah = '';
+        $this->jumlah_tandan = '';
+        $this->no_pohon = '';
+        $this->pohon_usia = '';
+        $this->bakal_tandan = '';
+        $this->spiral = '';
+        $this->buah_dompet = '';
+        $this->kebun_id = '';
+        $this->no_bukti = '';
+        $this->tgl_bukti = '';
+        $this->detail_id = '';
+    }
+
+    public function editPohon($id, $pohon = '', $dmp_bukti = '', $dmp_id = '')
+    {
+        try {
+            if ($id == '-') {
+                $this->detail_id = '';
+                $this->demplot_id = $dmp_id;
+                $this->no_pohon = $pohon;
+                $this->no_bukti = $dmp_bukti;
+                $this->pohon_usia = '';
+                // $this->tgl_bukti = $demplotDet->tgl_bukti;
+                $this->kebun_id = $this->kebun_id;
+                $this->pelanggan_name = $this->pelanggan_name;
+                $this->jumlah_pelapah = '';
+                $this->jumlah_tandan = '';
+                $this->bakal_tandan = '';
+                $this->spiral = '';
+                $this->buah_dompet = '';
+                $this->updateDempDet = true;
             } else {
-                $this->updatePohon($form);
+                $demplotDet =  mDemplotDet::findOrfail($id);
+                if (!$demplotDet) {
+                    session()->flash('error', 'Data Tidak Ditemukan');
+                } else {
+                    $this->detail_id = $demplotDet->detail_id;
+                    $this->demplot_id = $demplotDet->demplot_id;
+                    $gNoPohon = explode('/', $demplotDet->no_pohon);
+                    $this->no_pohon = $gNoPohon[1];
+                    $this->no_bukti = $demplotDet->demplotmaster->no_bukti;
+                    $this->pohon_usia = $demplotDet->pohon_usia;
+                    $this->tgl_bukti = $demplotDet->tgl_bukti;
+                    $this->kebun_id = $demplotDet->demplotmaster->kebun_id;
+                    $this->pelanggan_name = $demplotDet->demplotmaster->kebun->pelanggan->pelanggan_name;
+                    $this->jumlah_pelapah = $demplotDet->jumlah_pelapah;
+                    $this->jumlah_tandan = $demplotDet->jumlah_tandan;
+                    $this->bakal_tandan = $demplotDet->bakal_tandan;
+                    $this->spiral = $demplotDet->spiral;
+                    $this->buah_dompet = $demplotDet->buah_dompet;
+
+                    $this->updateDempDet = true;
+                }
             }
+        } catch (\Exception $ex) {
+            session()->flash('error', 'Ada yang salah nih' . $ex);
         }
     }
 
-    public function storePohon($form)
+    public function storePohon()
     {
         //$this->validate();
 
         try {
-            if (!empty($form['no_pohon']) && !empty($form['pohon_usia']) && !empty($form['jumlah_pelapah']) && !empty($form['jumlah_tandan']) && !empty($form['bakal_tandan']) && !empty($form['spiral']) && !empty($form['buah_dompet'])) {
-                mDemplotDet::create([
-                    'demplot_id' => $form['demplot_id'],
-                    'no_pohon' => $form['no_bukti'] . '/' . $form['no_pohon'],
-                    'pohon_usia' => $form['pohon_usia'],
-                    'jumlah_pelapah' => $form['jumlah_pelapah'],
-                    'jumlah_tandan' => $form['jumlah_tandan'],
-                    'bakal_tandan' => $form['bakal_tandan'],
-                    'spiral' => $form['spiral'],
-                    'buah_dompet' => $form['buah_dompet'],
-                ]);
-            }
+            mDemplotDet::create([
+                'demplot_id' => $this->demplot_id,
+                'no_pohon' => $this->no_bukti . '/' . $this->no_pohon,
+                'pohon_usia' => $this->pohon_usia,
+                'jumlah_pelapah' => $this->jumlah_pelapah,
+                'jumlah_tandan' => $this->jumlah_tandan,
+                'bakal_tandan' => $this->bakal_tandan,
+                'spiral' => $this->spiral,
+                'buah_dompet' => $this->buah_dompet,
+            ]);
+            $dDemplotMas = mDemplotMas::where('demplot_id', $this->demplot_id)->first();
+            $this->demplotDet = mDemplotDet::where('demplot_id', $this->demplot_id)->get();
+            $this->hitung = count($this->demplotDet);
+            $this->demplot_pohon_h = $dDemplotMas->demplot_pohon;
+
             session()->flash('success', 'Berhasil Menambahkan Data');
             $this->resetFieldsPohon();
-            $this->createDempDet = false;
+            $this->updateDempDet = false;
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Menambahkan Data' . $ex);
         }
     }
 
-    public function updatePohon($form)
+    public function updatePohon()
     {
         //$this->validate();
 
         try {
-            mDemplotDet::where('detail_id', $form['detail_id'])->update([
-                'jumlah_pelapah' => $form['jumlah_pelapah'],
-                'no_pohon' => $form['no_bukti'] . '/' . $form['no_pohon'],
-                'pohon_usia' => $form['pohon_usia'],
-                'jumlah_tandan' => $form['jumlah_tandan'],
-                'bakal_tandan' => $form['bakal_tandan'],
-                'spiral' => $form['spiral'],
-                'buah_dompet' => $form['buah_dompet'],
+            mDemplotDet::where('detail_id', $this->detail_id)->update([
+                'jumlah_pelapah' => $this->jumlah_pelapah,
+                'no_pohon' => $this->no_bukti . '/' . $this->no_pohon,
+                'pohon_usia' => $this->pohon_usia,
+                'jumlah_tandan' => $this->jumlah_tandan,
+                'bakal_tandan' => $this->bakal_tandan,
+                'spiral' => $this->spiral,
+                'buah_dompet' => $this->buah_dompet,
             ]);
+            $dDemplotMas = mDemplotMas::where('demplot_id', $this->demplot_id)->first();
+            $this->demplotDet = mDemplotDet::where('demplot_id', $dDemplotMas->demplot_id)->get();
+            $this->hitung = count($this->demplotDet);
+            $this->demplot_pohon_h = $dDemplotMas->demplot_pohon;
+
             session()->flash('success', 'Berhasil Mengubah Data');
             $this->resetFieldsPohon();
-            $this->createDempDet = false;
+            $this->updateDempDet = false;
         } catch (\Exception $ex) {
             session()->flash('error', 'Gagal Mengubah Data' . $ex);
         }
+    }
+
+    public function destroyPohon($id, $demplot_id = '')
+    {
+        try {
+            if($id == '-'){
+                session()->flash('error', 'Data tidak ada karen belum disimpan di database');
+            } else {
+                mDemplotDet::findOrfail($id)->delete();
+                $dDemplotMas = mDemplotMas::where('demplot_id', $demplot_id)->first();
+                $this->demplotDet = mDemplotDet::where('demplot_id', $demplot_id)->get();
+                $this->hitung = count($this->demplotDet);
+                $this->demplot_pohon_h = $dDemplotMas->demplot_pohon;
+                session()->flash('success', 'Berhasil Menghapus Data');
+            }            
+        } catch (\Exception $ex) {
+            session()->flash('error', 'Gagal Menghapus Data'. $ex);
+        }
+    }
+
+    public function demplotShow($kebun_id)
+    {
+        $this->dDemplot = mDemplotMas::where('kebun_id', $kebun_id)->get();
+        $this->showDemplot = true;
+        $this->visible = false;
+        $this->unVisible = true;
+        $this->id_tampil = $kebun_id;
+    }
+
+    public function demplotClose()
+    {
+        $this->dDemplot = mDemplotMas::where('kebun_id', $this->kebun_id)->get();
+        $this->dDemplot = [];
+        $this->showDemplot = false;
+        $this->visible = true;
     }
 }

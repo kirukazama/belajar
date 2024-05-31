@@ -14,15 +14,15 @@
                 <br>
                 @endif
 
-                @if($createDempDet)
-                @include('livewire.demplotmaster.addpohon')
+                @if($pohondetail)
+                @include('livewire.demplotmaster.demplot_detail')
                 <br>
                 @endif
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                @if(session()->has('success'))
+                @if(session()->has('success') && !$pohondetail)
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <span class="alert-icon align-middle">
                         <span class="material-icons text-md">
@@ -36,7 +36,7 @@
                 </div>
                 @endif
 
-                @if(session()->has('error'))
+                @if(session()->has('error') && !$pohondetail)
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <span class="alert-icon align-middle">
                         <span class="material-icons text-md">
@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-12">
-                @if(!$createDemplot && !$updateDemplot && !$createDempDet)
+                @if(!$createDemplot && !$updateDemplot && !$pohondetail)
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-lg-flex">
@@ -74,28 +74,39 @@
                                     <table class="table table-flush dataTable-table">
                                         <thead class="alert alert-success">
                                             <tr>
+                                                <th class="text-white text-center text-sm">#</th>
                                                 <th class="text-uppercase text-white text-xs font-weight-bolder">
                                                     No
                                                 </th>
-                                                <th class="text-uppercase text-white text-xs font-weight-bolder">
-                                                    Nama</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Alamat</th>
-                                                <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    Perusahaan</th>
-                                                <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
-                                                    ID Kebun</th>
+                                                    Alamat Kebun</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Luas Kebun</th>
                                                 <th class="text-center text-uppercase text-white text-xs font-weight-bolder">
                                                     Jumlah Pohon</th>
-                                                <th class="text-white"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($dKebun as $key => $rKebun)
                                             <?php $no = 1; ?>
                                             <tr>
+                                                <td class="align-middle text-center text-sm">
+                                                    <button wire:click="create({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">add</i>
+                                                        <div class="ripple-container">&nbsp; Proses</div>
+                                                    </button>
+                                                    @if($rKebun->kebun_id != $id_tampil || $visible)
+                                                    <button wire:click.prevent="demplotShow({{$rKebun->kebun_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button>
+                                                    @else
+                                                    <button wire:click.prevent="demplotClose()" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                        <i class="material-icons">visibility_off</i>
+                                                        <div class="ripple-container">&nbsp; Kebun</div>
+                                                    </button>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <div class="d-flex px-2 py-1">
                                                         <div class="d-flex flex-column justify-content-center">
@@ -103,23 +114,12 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{$rKebun->pelanggan->pelanggan_name}}</h6>
-                                                    </div>
-                                                </td>
                                                 <td class="align-middle text-sm">
                                                     <p class="text-xs text-secondary mb-0">
-                                                        {{$rKebun->pelanggan->pelanggan_alamat}}, <br> <strong>Kel/Desa. </strong> {{ucwords(strtolower($rKebun->pelanggan->keldes->keldes_name))}}, <br>
-                                                        <strong>Kec. </strong>{{ucwords(strtolower($rKebun->pelanggan->keldes->kecamatan->kec_name))}}, <br> <strong>Kab/Kota. </strong>{{ucwords(strtolower($rKebun->pelanggan->keldes->kecamatan->kabkot->kabkot_name))}},
-                                                        <br> <strong>Prov. </strong>{{ucwords(strtolower($rKebun->pelanggan->keldes->kecamatan->kabkot->provinsi->provinsi_name))}}
+                                                        {{$rKebun->kebun_alamat}}, <br> <strong>Kel/Desa. </strong> {{ucwords(strtolower($rKebun->keldes->keldes_name))}}, <br>
+                                                        <strong>Kec. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kec_name))}}, <br> <strong>Kab/Kota. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kabkot->kabkot_name))}},
+                                                        <br> <strong>Prov. </strong>{{ucwords(strtolower($rKebun->keldes->kecamatan->kabkot->provinsi->provinsi_name))}}
                                                     </p>
-                                                </td>
-                                                <td class="align-middle text-center text-sm">
-                                                    <span class="text-secondary text-xs font-weight-bold">{{$rKebun->pelanggan->perusahaan_name}}</span>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <span class="text-secondary text-xs font-weight-bold">{{$rKebun->pelanggan->perusahaan_telp}}</span>
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <span class="text-secondary text-xs font-weight-bold">{{$rKebun->kebun_luas}} Hektar</span>
@@ -127,19 +127,15 @@
                                                 <td class="align-middle text-center">
                                                     <span class="text-secondary text-xs font-weight-bold">{{$rKebun->kebun_pohon}} btg</span>
                                                 </td>
-                                                <td class="align-middle">
-                                                    <button wire:click="create({{$rKebun->kebun_id}}, {{$rKebun->pelanggan_id}})" type="button" class="btn btn-dark btn-link btn-sm" data-original-title="" title="">
-                                                        <i class="material-icons">add</i>
-                                                        <div class="ripple-container">&nbsp; demplot</div>
-                                                    </button>
-                                                </td>
                                             </tr>
+                                            @if($showDemplot && $rKebun->kebun_id == $id_tampil)
                                             <tr>
-                                                <td colspan="8">
+                                                <td colspan="5">
                                                     <table class="table align-items-center mb-0">
                                                         <thead class="alert alert-secondary">
                                                             <tr>
                                                                 <th></th>
+                                                                <th class="align-middle text-center text-sm">#</th>
                                                                 <th class="text-uppercase text-light text-xxs font-weight-bolder">
                                                                     No
                                                                 </th>
@@ -155,15 +151,28 @@
                                                                     Tahapan Demplot</th>
                                                                 <th class="text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Sesi Demplot</th>
-                                                                <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($dDemplot as $key => $rDemplot)
-                                                            @if($rKebun->kebun_id == $rDemplot->kebun_id)
                                                             <tr class="bg-light  p-2 text-white">
                                                                 <td></td>
-                                                                <td>
+                                                                <td class="align-middle text-center text-sm">
+                                                                    <button wire:click="edit({{$rDemplot->demplot_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">edit</i>
+                                                                        <div class="ripple-container"></div>
+                                                                    </button>
+                                                                    <button wire:click="destroy({{$rDemplot->demplot_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">close</i>
+                                                                        <div class="ripple-container"></div>
+                                                                    </button>
+                                                                    <br>
+                                                                    <button wire:click="detailPohon({{$rDemplot->demplot_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
+                                                                        <i class="material-icons">add</i>
+                                                                        <div class="ripple-container">&nbsp; Demplot</div>
+                                                                    </button>
+                                                                </td>
+                                                                <td class="text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$no++}}</span>
                                                                 </td>
                                                                 <td>
@@ -184,30 +193,14 @@
                                                                 <td class="align-middle text-center text-sm ">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$rDemplot->demplot_sesi}}</span>
                                                                 </td>
-                                                                <td class="align-middle">
-                                                                    <button wire:click="edit({{$rDemplot->demplot_id}})" type="button" class="btn btn-success btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">edit</i>
-                                                                        <div class="ripple-container"></div>
-                                                                    </button>
-                                                                    <button wire:click="destroy({{$rDemplot->demplot_id}})" wire:confirm="Yakin ingin menghapus ?" type="button" class="btn btn-danger btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">close</i>
-                                                                        <div class="ripple-container"></div>
-                                                                    </button>
-                                                                    <br>
-                                                                    <button wire:click="createpohon({{$rDemplot->demplot_id}})" type="button" class="btn btn-info btn-link btn-sm" data-original-title="" title="">
-                                                                        <i class="material-icons">add</i>
-                                                                        <div class="ripple-container">&nbsp; Pohon</div>
-                                                                    </button>
-                                                                </td>
                                                             </tr>
                                                             <?php unset($dDemplot[$key]); ?>
-                                                            @endif
                                                             @endforeach
-
                                                         </tbody>
                                                     </table>
                                                 </td>
                                             </tr>
+                                            @endif
                                             @empty
                                             <tr>
                                                 <td colspan="7" align="center"> Data Kebun belum ada </td>
