@@ -14,7 +14,7 @@ class Kebun extends Model
     protected $table = 'kebun';
     protected $primaryKey = 'kebun_id';
     protected $fillable = ['kebun_luas', 'kebun_pohon', 'kebun_alamat',
-                        'keldes_id', 'koordinat', 'pelanggan_id'];
+                        'keldes_id', 'koordinat', 'tanah_jenis', 'tanah_kontur', 'pelanggan_id'];
 
     public function pelanggan(){
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');

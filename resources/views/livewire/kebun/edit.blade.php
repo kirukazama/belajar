@@ -102,6 +102,33 @@
                     @enderror
                 </div>
 
+                <div class="mb-3 col-md-3">
+                    <label class="form-label">Jenis Tanah</label>
+                    <select wire:model.live="tanah_jenis" class="form-select border border-2 p-2">
+                        <option value="">:: Pilih Jenis ::</option>
+                        <option value="Gambut">Gambut</option>
+                        <option value="Berbatu/Berpasir">Berbatu/Berpasir</option>
+                        <option value="Rawa">Rawa</option>
+                    </select>
+                    @error('tanah_jenis')
+                    <p class='text-danger inputerror'>{{ $message }} </p>
+                    @enderror
+                </div>
+
+                <div class="mb-3 col-md-3">
+                    <label class="form-label">Kontur tanah</label>
+                    <select wire:model.live="tanah_kontur" class="form-select border border-2 p-2">
+                        <option value="">:: Pilih Kontur ::</option>
+                        <option value="Rata">Rata</option>
+                        <option value="Lereng">Lereng</option>
+                        <option value="Ketinggian">Ketinggian</option>
+                        <option value="Kerendahan">Kerendahan</option>
+                    </select>
+                    @error('tanah_kontur')
+                    <p class='text-danger inputerror'>{{ $message }} </p>
+                    @enderror
+                </div>
+
             </div>
             <button type="submit" class="btn bg-gradient-dark">Simpan</button>
             <button wire:click.prevent="cancel" type="button" class="btn bg-gradient-danger">Batal</button>

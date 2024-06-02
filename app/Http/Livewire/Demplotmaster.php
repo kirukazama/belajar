@@ -325,7 +325,14 @@ class Demplotmaster extends Component
             if ($id == '-') {
                 session()->flash('error', 'Data tidak ada karen belum disimpan di database');
             } else {
-                mDemplotDet::findOrfail($id)->delete();
+                mDemplotDet::where('detail_id', $id)->update([
+                    'jumlah_pelapah' => 0,
+                    'pohon_usia' => 0,
+                    'jumlah_tandan' => 0,
+                    'bakal_tandan' => 0,
+                    'spiral' => 0,
+                    'buah_dompet' => 0,
+                ]);
                 $dDemplotMas = mDemplotMas::where('demplot_id', $demplot_id)->first();
                 $this->demplotDet = mDemplotDet::where('demplot_id', $demplot_id)->get();
                 $this->hitung = count($this->demplotDet);

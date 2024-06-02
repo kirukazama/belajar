@@ -150,6 +150,8 @@
                                                                 <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Luas Kebun</th>
                                                                 <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
+                                                                    Kondisi Tanah</th>
+                                                                <th class="text-center text-center text-uppercase text-light text-xxs font-weight-bolder">
                                                                     Jumlah Pohon</th>
                                                             </tr>
                                                         </thead>
@@ -178,6 +180,9 @@
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm">
                                                                     <span class="text-dark text-xs font-weight-bold"> {{$rKebun->kebun_luas}}</span>
+                                                                </td>
+                                                                <td class="align-middle text-sm">
+                                                                    <p class="text-xs text-secondary mb-0"> <strong>Jenis : </strong> {{$rKebun->tanah_jenis}} <br> <strong>Kontur : </strong> {{$rKebun->tanah_kontur}}</p>
                                                                 </td>
                                                                 <td class="align-middle text-center text-sm ">
                                                                     <span class="text-dark text-xs font-weight-bold">{{$rKebun->kebun_pohon}}</span>
