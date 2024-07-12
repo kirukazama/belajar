@@ -67,7 +67,7 @@
                 </div>
                 @if(!$updateDempDet)
                 <div class="row">
-                    <table class="table align-items-center mb-0">
+                    <table class="table align-items-center mb-0" id="example" style="width:100%">
                         <thead class="alert alert-secondary">
                             <tr>
                                 <th>
@@ -174,4 +174,3 @@
             </div>
         </div>
     </div>
-</div>

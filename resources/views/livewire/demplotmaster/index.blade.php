@@ -238,16 +238,17 @@
     </div>
 </div>
 
+
 @push('scripts')
 
 <script>
-    $(document).ready(function() {
-        $('#select2').select2();
-        $('#select2').on('change', function(e) {
-            var data = $('#select2').select2("val");
+$('#example').DataTable();
 
-        });
-    });
+$(document).ready(function(){
+  $("button").click(function(){
+    $("p").hide();
+  });
+});
 </script>
 
 @endpush
